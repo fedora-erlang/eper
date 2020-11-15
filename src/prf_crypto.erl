@@ -14,8 +14,13 @@ block_encrypt(Key,IVec,Text) -> crypto:des_cbc_encrypt(Key,IVec,Text).
 block_decrypt(Key,IVec,Text) -> crypto:des_cbc_decrypt(Key,IVec,Text).
 -else.
 hash(Data) -> crypto:hash(md5,Data).
+-if(?OTP_RELEASE >= 23).
+block_encrypt(Key,IVec,Text) -> crypto:crypto_one_time(des_cbc,Key,IVec,Text,true).
+block_decrypt(Key,IVec,Text) -> crypto:crypto_one_time(des_cbc,Key,IVec,Text,false).
+-elif(?OTP_RELEASE < 23).
 block_encrypt(Key,IVec,Text) -> crypto:block_encrypt(des_cbc,Key,IVec,Text).
 block_decrypt(Key,IVec,Text) -> crypto:block_decrypt(des_cbc,Key,IVec,Text).
+-endif.
 -endif.
 
 phrase() -> atom_to_list(erlang:get_cookie()).
